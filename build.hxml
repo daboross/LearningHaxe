@@ -1,0 +1,4 @@
+-cp src/
+-main net.daboross.hex.Hex
+-dce full
+-neko target/hex.n
