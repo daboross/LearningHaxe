@@ -8,6 +8,7 @@ import createjs.easeljs.Container;
 import createjs.easeljs.Event;
 import js.html.KeyboardEvent;
 
+import net.daboross.hex.util.Keyboard;
 import net.daboross.hex.Character;
 
 class SpaceHandler {
@@ -17,10 +18,13 @@ class SpaceHandler {
     public var stageCenterY:Int;
     private var character:Character;
     private var spaceContainer:Container;
+    private var keyboard:Keyboard;
 
     public function new() {
         this.stageCenterX = cast(stage.canvas.width / 2, Int);
         this.stageCenterY = cast(stage.canvas.height / 2, Int);
+
+        this.keyboard = new Keyboard();
 
         this.spaceContainer = new Container();
         stage.addChild(spaceContainer);
@@ -28,26 +32,21 @@ class SpaceHandler {
         var characterSprite:Sprite = new Sprite(createSheet("Green.png", 64, 64), 0);
         spaceContainer.addChild(characterSprite);
 
-        this.character = new Character(this, characterSprite);
+        this.character = new Character(this, characterSprite, keyboard);
     }
 
     public function start() {
         Ticker.setFPS(60);
         Ticker.addEventListener("tick", tick);
-        Ticker.addEventListener("keydown", character.handleKeyPress);
-        js.Browser.document.onkeydown = fireKeyDown;
+        keyboard.register();
     }
 
     public function tick(event:Event) {
         character.tick();
-        spaceContainer.x = stageCenterX - character.spaceX;
-        spaceContainer.y = stageCenterY - character.spaceY;
+        spaceContainer.x = stageCenterX ;//- character.spaceX;
+        spaceContainer.y = stageCenterY ;//- character.spaceY;
 
         stage.update();
-    }
-
-    public function fireKeyDown(e:KeyboardEvent) {
-        Ticker.dispatchEvent(e);
     }
 
     private function createSheet(file:String, width:Int, height:Int) {
