@@ -1,0 +1,5 @@
+-cp src/main/haxe/
+-main net.daboross.hex.Main
+-lib createjs
+-dce full
+-js target/hex.js
