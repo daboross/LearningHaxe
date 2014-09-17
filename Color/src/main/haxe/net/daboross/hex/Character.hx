@@ -42,8 +42,8 @@ class Character {
         }
 
         if (tempY != 0) {
-            xVelocity -= tempY * Math.cos(Math.PI / 180 * rotation);
-            yVelocity -= tempY * Math.sin(Math.PI / 180 * rotation);
+            xVelocity += tempY * Math.cos(Math.PI / 180 * rotation);
+            yVelocity += tempY * Math.sin(Math.PI / 180 * rotation);
         }
 
         if (tempX != 0) {
@@ -65,7 +65,7 @@ class Character {
 
         sprite.x = spaceX;
         sprite.y = spaceY;
-        sprite.rotation = rotation - 180;
+        sprite.rotation = rotation;
         trace(" spaceX = " + Std.int(spaceX) + " spaceY = " + Std.int(spaceY));
     }
 }
