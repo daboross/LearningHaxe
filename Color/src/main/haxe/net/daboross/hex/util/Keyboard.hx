@@ -5,6 +5,7 @@ import js.html.KeyboardEvent;
 import js.Browser;
 
 class Keyboard {
+
     private var keys:Map<Int, Bool> = new Map<Int, Bool>();
 
     public function new() {
