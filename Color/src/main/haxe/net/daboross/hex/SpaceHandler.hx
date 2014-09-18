@@ -10,29 +10,31 @@ import js.html.KeyboardEvent;
 
 import net.daboross.hex.util.Keyboard;
 import net.daboross.hex.Character;
+import net.daboross.hex.Populator;
 
 class SpaceHandler {
 
     public var stage:Stage = new Stage("hex-canvas");
+    public var spaceContainer:Container = new Container();
     public var stageCenterX:Int;
     public var stageCenterY:Int;
-    private var character:Character;
-    private var spaceContainer:Container;
-    private var keyboard:Keyboard;
+    public var keyboard:Keyboard = new Keyboard();
+    public var character:Character;
+    public var populator:Populator;
 
     public function new() {
-        this.stageCenterX = cast(stage.canvas.width / 2, Int);
-        this.stageCenterY = cast(stage.canvas.height / 2, Int);
+        stageCenterX = cast(stage.canvas.width / 2, Int);
+        stageCenterY = cast(stage.canvas.height / 2, Int);
 
-        this.keyboard = new Keyboard();
-
-        this.spaceContainer = new Container();
         stage.addChild(spaceContainer);
 
-        var characterSprite:Sprite = new Sprite(createSheet("Green.png", 64, 64), 0);
-        spaceContainer.addChild(characterSprite);
+        this.character = new Character(this, keyboard, createSheet("Green.png", 64, 64), 0);
+        character.x = stageCenterX;
+        character.y = stageCenterY;
+        stage.addChildAt(character, 0);
+        stage.addChildAt(character.statusText, 0);
 
-        this.character = new Character(this, characterSprite, keyboard);
+        this.populator = new Populator(this, createSheet("Blue.png", 64, 64));
     }
 
     public function start() {
@@ -43,14 +45,14 @@ class SpaceHandler {
 
     public function tick(event:Event) {
         character.tick();
-        spaceContainer.x = stageCenterX ;//- character.spaceX;
-        spaceContainer.y = stageCenterY ;//- character.spaceY;
-
+        spaceContainer.x = stageCenterX - character.spaceX;
+        spaceContainer.y = stageCenterY - character.spaceY;
+        populator.tick();
         stage.update();
     }
 
-    private function createSheet(file:String, width:Int, height:Int) {
-        var sheet:SpriteSheet = new SpriteSheet({
+    private function createSheet(file:String, width:Int, height:Int) : SpriteSheet {
+        return new SpriteSheet({
             "images": [file],
             "frames": {
                 "width": width,
@@ -59,6 +61,5 @@ class SpaceHandler {
                 "regY": cast((height / 2), Int)
             }
         });
-        return sheet;
     }
 }
