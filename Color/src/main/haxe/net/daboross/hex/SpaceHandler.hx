@@ -23,8 +23,8 @@ class SpaceHandler {
     public var populator:Populator;
 
     public function new() {
-        stageCenterX = cast(stage.canvas.width / 2, Int);
-        stageCenterY = cast(stage.canvas.height / 2, Int);
+        stageCenterX = Std.int(stage.canvas.width / 2);
+        stageCenterY = Std.int(stage.canvas.height / 2);
 
         stage.addChild(spaceContainer);
 
@@ -57,8 +57,8 @@ class SpaceHandler {
             "frames": {
                 "width": width,
                 "height": height,
-                "regX": cast((width / 2), Int),
-                "regY": cast((height / 2), Int)
+                "regX": Std.int(width / 2),
+                "regY": Std.int(height / 2)
             }
         });
     }
