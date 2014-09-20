@@ -6,13 +6,12 @@ import createjs.easeljs.Sprite;
 
 import net.daboross.hex.SpaceHandler;
 import net.daboross.hex.enemies.BasicEnemy;
-import net.daboross.hex.bounding.BoundUtils;
 
 typedef Point = {x:Float, y:Float};
 
-class Populator {
+class EnemyHandler {
 
-    private static inline var ENEMY_SPAWN = 3 * 1000;
+    private static var DISTANCE_FROM_CHARACTER = 500;
 
     private var enemies:List<BasicEnemy> = new List();
     private var nextSpawn:Float = 0;
@@ -24,12 +23,35 @@ class Populator {
         this.sheet = sheet;
     }
 
+    /**
+     * Gets time between enemey spawns, given the current level.
+     */
+    private inline function getEnemySpawnTime() {
+        return 3 * 1000 + 0.2 * space.character.level;
+    }
+
+    private function getNextEnemy() {
+        if (space.character.level < 3) {
+            js.Browser.window.console.log(sheet);
+            return new BasicEnemy(space, sheet, 0);
+        } else if (space.character.level < 5) {
+            if (Math.random() > 0.7) {
+                return new BasicEnemy(space, sheet, 0);
+            } else {
+                // TODO: Future enemies
+                return new BasicEnemy(space, sheet, 1);
+            }
+        };
+        // TODO: Future level enemies
+        return new BasicEnemy(space, sheet, 2);
+    }
+
     public function tick() {
         var time:Float = Ticker.getTime(true);
         if (time > nextSpawn) {
-            nextSpawn = time + ENEMY_SPAWN;
-            trace("Spawning!");
-            var sprite:BasicEnemy = new BasicEnemy(space, sheet, 0);
+            nextSpawn = time + getEnemySpawnTime();
+            trace("Spawning");
+            var sprite:BasicEnemy = getNextEnemy();
             var pos:Point = getRandomPosition();
             sprite.x = pos.x;
             sprite.y = pos.y;
@@ -38,9 +60,8 @@ class Populator {
         }
         var dead:List<BasicEnemy> = new List();
         for (enemy in enemies) {
-            enemy.tick();
-            if (BoundUtils.checkBound(enemy.x, enemy.y, enemy.radius,
-                space.character.spaceX, space.character.spaceY, space.character.radius)) {
+            var alive:Bool = enemy.tick();
+            if (!alive) {
                 dead.add(enemy);
             }
         }
@@ -52,25 +73,25 @@ class Populator {
 
     private function getRandomPosition() : Point {
         var side:Int = Std.random(4);
-        var posOnSide:Float = 500 - Math.random() * 1000;
+        var posOnSide:Float = DISTANCE_FROM_CHARACTER - Math.random() * DISTANCE_FROM_CHARACTER * 2;
         var x:Float;
         var y:Float;
         switch (Std.random(4)) {
             case 0:
                 // North
                 x = posOnSide;
-                y = -500;
+                y = -DISTANCE_FROM_CHARACTER;
             case 1:
                 // East
-                x = 500;
+                x = DISTANCE_FROM_CHARACTER;
                 y = posOnSide;
             case 2:
                 // South
                 x = posOnSide;
-                y = 500;
+                y = DISTANCE_FROM_CHARACTER;
             case 3:
                 // West
-                x = -500;
+                x = -DISTANCE_FROM_CHARACTER;
                 y = posOnSide;
             default:
                 throw "Error: Invalid number returned from Std.random()";

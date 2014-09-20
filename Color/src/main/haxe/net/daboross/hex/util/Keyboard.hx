@@ -17,7 +17,8 @@ class Keyboard {
     }
 
     public function onKeyDown(e:KeyboardEvent) {
-        if (e.ctrlKey) {
+        if (e.ctrlKey || (e.keyCode >= 112 && e.keyCode <= 123)) {
+            // Ignore keys modified by control key, and ignore F1-12
             return;
         }
         // Ensure that e.preventDefault isn't ever called when e.ctrlKey, so that things like page reloading work.
@@ -28,14 +29,21 @@ class Keyboard {
     }
 
     public function onKeyUp(e:KeyboardEvent) {
-        if (e.ctrlKey) {
+        if (e.ctrlKey || (e.keyCode >= 112 && e.keyCode <= 123)) {
+            // Ignore keys modified by control key, and ignore F1-12
             return;
         }
         // Ensure that e.preventDefault isn't ever called when e.ctrlKey, so that things like page reloading work.
         // We still want to call it for other keys though, so up/down arrows don't make the page scroll.
         e.preventDefault();
 
-        keys[e.keyCode] = false;
+        keys.remove(e.keyCode);
+    }
+
+    public function onBlur(e:js.html.Event) {
+        for (key in keys.keys()) {
+            keys.remove(key);
+        }
     }
 
     public function isPressed(key:Int) {

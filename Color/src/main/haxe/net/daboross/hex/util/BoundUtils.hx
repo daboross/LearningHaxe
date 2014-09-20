@@ -1,4 +1,4 @@
-package net.daboross.hex.bounding;
+package net.daboross.hex.util;
 
 class BoundUtils {
 
