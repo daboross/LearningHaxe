@@ -12,7 +12,8 @@ import net.daboross.hex.util.Keyboard;
 class Character extends Sprite {
 
     public var statusText:Text = new Text("x = 0 | y = 0", "Ubuntu Mono", "#FFF");
-    public var speed:Float = 1.0;
+    public var level:Float = 0;
+    public var shooting:Bool = false;
     public var spaceX:Float = 0;
     public var spaceY:Float = 0;
     public var radius:Int = 32;
@@ -26,6 +27,22 @@ class Character extends Sprite {
         super(sheet, frame);
         this.space = space;
         this.keyboard = keyboard;
+    }
+
+    private function getSpeed() : Float {
+        var speed:Float = 1.0 + level * 0.1;
+        if (shooting) {
+            speed *= 0.7;
+        }
+        return speed;
+    }
+
+    private function getBackwardsSpeed() : Float {
+        var speed:Float = 0.3 + level * 0.07;
+        if (shooting) {
+            speed *= 0.7;
+        }
+        return speed;
     }
 
     public function updateKeys() {
@@ -45,6 +62,12 @@ class Character extends Sprite {
         }
 
         if (tempY != 0) {
+            var speed:Float;
+            switch (tempY) {
+                case 1: speed = getSpeed();
+                case -1: speed = getBackwardsSpeed();
+                default: throw "Generic Error";
+            }
             xVelocity += speed * tempY * Math.cos(Math.PI / 180 * rotation);
             yVelocity += speed * tempY * Math.sin(Math.PI / 180 * rotation);
         }
