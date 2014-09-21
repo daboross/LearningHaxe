@@ -32,7 +32,6 @@ class EnemyHandler {
 
     private function getNextEnemy() {
         if (space.character.level < 3) {
-            js.Browser.window.console.log(sheet);
             return new BasicEnemy(space, sheet, 0);
         } else if (space.character.level < 5) {
             if (Math.random() > 0.7) {
