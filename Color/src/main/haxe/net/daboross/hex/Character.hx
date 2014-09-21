@@ -14,7 +14,7 @@ import net.daboross.hex.util.Position;
 
 class Character extends Sprite {
 
-    private static var SHOOTING_COOLDOWN = 1 * 1000;
+    private static var SHOOTING_COOLDOWN = 200; // milliseconds
     public var statusText:Text = new Text("x = 0 | y = 0", "Ubuntu Mono", "#FFF");
     public var level:Float = 0;
     public var shooting:Bool = false;
@@ -37,7 +37,7 @@ class Character extends Sprite {
     private function getSpeed() : Float {
         var speed:Float = 1.0 + level * 0.1;
         if (shooting) {
-            speed *= 0.7;
+            speed *= 0.5;
         }
         return speed;
     }
@@ -45,7 +45,7 @@ class Character extends Sprite {
     private function getBackwardsSpeed() : Float {
         var speed:Float = 0.3 + level * 0.07;
         if (shooting) {
-            speed *= 0.7;
+            speed *= 0.5;
         }
         return speed;
     }
@@ -80,7 +80,7 @@ class Character extends Sprite {
         }
 
         if (tempX != 0) {
-            rotationVelocity += tempX;
+            rotationVelocity += tempX * getSpeed();
         }
     }
 
@@ -88,14 +88,15 @@ class Character extends Sprite {
         if (shooting) { // shooting is set in updateKeys()
             var time:Float = Ticker.getTime(true);
             if (time > nextPossibleShot) {
+                nextPossibleShot = time + SHOOTING_COOLDOWN;
                 var rotationRadians:Float = rotation * Math.PI / 180;
                 var xVelocityUnit = Math.cos(rotationRadians);
                 var yVelocityUnit = Math.sin(rotationRadians);
                 var start:Position = {
-                    x:spaceX + xVelocity * radius,
-                    y:spaceY + yVelocity * radius,
-                    xVelocity: xVelocityUnit * 3,
-                    yVelocity: yVelocityUnit * 3
+                    x:spaceX + xVelocityUnit * radius,
+                    y:spaceY + yVelocityUnit * radius,
+                    xVelocity: xVelocityUnit * 8,
+                    yVelocity: yVelocityUnit * 8
                 };
                 trace("Firing");
                 space.projectileHandler.spawnCharBullet(start);
