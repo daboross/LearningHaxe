@@ -3,11 +3,11 @@ package net.daboross.hex;
 import createjs.easeljs.SpriteSheet;
 import createjs.easeljs.Ticker;
 import createjs.easeljs.Sprite;
+import createjs.easeljs.Point;
 
 import net.daboross.hex.SpaceHandler;
 import net.daboross.hex.enemies.BasicEnemy;
 
-typedef Point = {x:Float, y:Float};
 
 class EnemyHandler {
 
@@ -98,6 +98,6 @@ class EnemyHandler {
         }
         x += space.character.spaceX;
         y += space.character.spaceY;
-        return {x:x, y:y};
+        return new Point(x, y);
     }
 }
