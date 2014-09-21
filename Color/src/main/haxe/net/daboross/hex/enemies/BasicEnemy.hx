@@ -11,6 +11,7 @@ class BasicEnemy extends Sprite {
     var space:SpaceHandler;
     var speed:Float = 5.0;
     public var radius:Int = 32;
+    public var shot:Bool = false; // this will be set to true if this enemy has been shot
 
     public function new(space:SpaceHandler, sheet:SpriteSheet, frame:Dynamic) {
         super(sheet, frame);
@@ -18,6 +19,9 @@ class BasicEnemy extends Sprite {
     }
 
     public function tick() : Bool {
+        if (shot) {
+            return false; // we are dead
+        }
         var rotationRadians:Float = Math.atan2(space.character.spaceY - this.y, space.character.spaceX - this.x);
         this.rotation = rotationRadians * 180 / Math.PI;
         x += speed * Math.cos(rotationRadians);

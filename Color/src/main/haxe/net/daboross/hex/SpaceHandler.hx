@@ -11,6 +11,7 @@ import js.html.KeyboardEvent;
 import net.daboross.hex.util.Keyboard;
 import net.daboross.hex.Character;
 import net.daboross.hex.EnemyHandler;
+import net.daboross.hex.ProjectileHandler;
 
 class SpaceHandler {
 
@@ -20,7 +21,8 @@ class SpaceHandler {
     public var stageCenterY:Int;
     public var keyboard:Keyboard = new Keyboard();
     public var character:Character;
-    public var populator:EnemyHandler;
+    public var enemies:EnemyHandler;
+    public var projectileHandler:ProjectileHandler;
 
     public function new() {
         onResize(null);
@@ -33,7 +35,8 @@ class SpaceHandler {
         stage.addChildAt(character, 0);
         stage.addChildAt(character.statusText, 0);
 
-        this.populator = new EnemyHandler(this, createSheet("enemies.png", 64, 64));
+        this.enemies = new EnemyHandler(this, createSheet("enemies.png", 64, 64));
+        this.projectileHandler = new ProjectileHandler(this, createSheet("projectiles.png", 16, 16));
     }
 
     public function onResize(e:Dynamic) {
@@ -65,7 +68,8 @@ class SpaceHandler {
         character.tick();
         spaceContainer.x = stageCenterX - character.spaceX;
         spaceContainer.y = stageCenterY - character.spaceY;
-        populator.tick();
+        enemies.tick();
+        projectileHandler.tick();
         stage.update();
     }
 
@@ -75,8 +79,8 @@ class SpaceHandler {
     }
 
     public function onBlur(e:Dynamic) {
-        Ticker.setPaused(true);
         keyboard.onBlur(e);
+        Ticker.setPaused(true);
     }
 
     private function createSheet(file:String, width:Int, height:Int) : SpriteSheet {

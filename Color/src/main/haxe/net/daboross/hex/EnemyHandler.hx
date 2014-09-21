@@ -13,7 +13,7 @@ class EnemyHandler {
 
     private static var DISTANCE_FROM_CHARACTER = 500;
 
-    private var enemies:List<BasicEnemy> = new List();
+    public var enemies:List<BasicEnemy> = new List();
     private var nextSpawn:Float = 0;
     private var space:SpaceHandler;
     private var sheet:SpriteSheet;

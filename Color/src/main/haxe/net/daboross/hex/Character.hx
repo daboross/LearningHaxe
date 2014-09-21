@@ -1,16 +1,20 @@
 package net.daboross.hex;
 
+import js.html.KeyboardEvent;
+
+import createjs.easeljs.Ticker;
 import createjs.easeljs.Sprite;
 import createjs.easeljs.Text;
 import createjs.easeljs.SpriteSheet;
-import js.html.KeyboardEvent;
 
 import net.daboross.hex.SpaceHandler;
 import net.daboross.hex.util.KeyCodes;
 import net.daboross.hex.util.Keyboard;
+import net.daboross.hex.util.Position;
 
 class Character extends Sprite {
 
+    private static var SHOOTING_COOLDOWN = 1 * 1000;
     public var statusText:Text = new Text("x = 0 | y = 0", "Ubuntu Mono", "#FFF");
     public var level:Float = 0;
     public var shooting:Bool = false;
@@ -22,6 +26,7 @@ class Character extends Sprite {
     private var xVelocity:Float = 0;
     private var yVelocity:Float = 0;
     private var rotationVelocity:Float = 0;
+    private var nextPossibleShot:Float = 0; // for shooting cooldown
 
     public function new(space:SpaceHandler, keyboard:Keyboard, sheet:SpriteSheet, frame:Dynamic) {
         super(sheet, frame);
@@ -46,6 +51,8 @@ class Character extends Sprite {
     }
 
     public function updateKeys() {
+        shooting = keyboard.isPressed(KeyCodes.SPACE_BAR);
+
         var tempY:Int = 0;
         var tempX:Int = 0;
         if (keyboard.isPressed(KeyCodes.UP)) {
@@ -77,8 +84,28 @@ class Character extends Sprite {
         }
     }
 
+    public function updateWeapons() {
+        if (shooting) { // shooting is set in updateKeys()
+            var time:Float = Ticker.getTime(true);
+            if (time > nextPossibleShot) {
+                var rotationRadians:Float = rotation * Math.PI / 180;
+                var xVelocityUnit = Math.cos(rotationRadians);
+                var yVelocityUnit = Math.sin(rotationRadians);
+                var start:Position = {
+                    x:spaceX + xVelocity * radius,
+                    y:spaceY + yVelocity * radius,
+                    xVelocity: xVelocityUnit * 3,
+                    yVelocity: yVelocityUnit * 3
+                };
+                trace("Firing");
+                space.projectileHandler.spawnCharBullet(start);
+            }
+        }
+    }
+
     public function tick() {
         updateKeys();
+        updateWeapons();
 
         spaceX += xVelocity;
         spaceY += yVelocity;
