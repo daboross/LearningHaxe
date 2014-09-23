@@ -1,12 +1,12 @@
 package net.daboross.hex;
 
 import createjs.easeljs.SpriteSheet;
-import createjs.easeljs.Ticker;
 import createjs.easeljs.Sprite;
 import createjs.easeljs.Point;
 
 import net.daboross.hex.SpaceHandler;
 import net.daboross.hex.enemies.BasicEnemy;
+import net.daboross.hex.util.TimeUtils;
 
 
 class EnemyHandler {
@@ -46,7 +46,7 @@ class EnemyHandler {
     }
 
     public function tick() {
-        var time:Float = Ticker.getTime(true);
+        var time:Float = TimeUtils.getTime();
         if (time > nextSpawn) {
             nextSpawn = time + getEnemySpawnTime();
             trace("Spawning");

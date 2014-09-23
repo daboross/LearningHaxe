@@ -11,6 +11,7 @@ import net.daboross.hex.SpaceHandler;
 import net.daboross.hex.util.KeyCodes;
 import net.daboross.hex.util.Keyboard;
 import net.daboross.hex.util.Position;
+import net.daboross.hex.util.TimeUtils;
 
 class Character extends Sprite {
 
@@ -86,7 +87,7 @@ class Character extends Sprite {
 
     public function updateWeapons() {
         if (shooting) { // shooting is set in updateKeys()
-            var time:Float = Ticker.getTime(true);
+            var time:Float = TimeUtils.getTime();
             if (time > nextPossibleShot) {
                 nextPossibleShot = time + SHOOTING_COOLDOWN;
                 var rotationRadians:Float = rotation * Math.PI / 180;
@@ -117,6 +118,6 @@ class Character extends Sprite {
         yVelocity *= 0.9;
         rotationVelocity *= 0.9;
 
-        statusText.text = " x = " + Std.int(spaceX) + " | y = " + Std.int(spaceY);
+        statusText.text = " x = " + Std.int(spaceX) + " | y = " + Std.int(spaceY) + " | FPS = " + Ticker.getFPS();
     }
 }
