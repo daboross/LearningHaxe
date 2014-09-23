@@ -1,6 +1,5 @@
 package net.daboross.hex.util;
 
-import createjs.easeljs.Ticker;
 import js.html.KeyboardEvent;
 import js.Browser;
 

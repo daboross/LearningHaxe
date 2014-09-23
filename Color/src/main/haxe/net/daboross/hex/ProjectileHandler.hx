@@ -4,7 +4,6 @@ import createjs.easeljs.Sprite;
 import createjs.easeljs.SpriteSheet;
 
 import net.daboross.hex.SpaceHandler;
-import net.daboross.hex.enemies.BasicEnemy;
 import net.daboross.hex.util.BoundUtils;
 import net.daboross.hex.util.Position;
 

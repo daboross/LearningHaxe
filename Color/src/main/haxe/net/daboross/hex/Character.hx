@@ -1,7 +1,5 @@
 package net.daboross.hex;
 
-import js.html.KeyboardEvent;
-
 import createjs.easeljs.Ticker;
 import createjs.easeljs.Sprite;
 import createjs.easeljs.Text;

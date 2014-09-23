@@ -6,7 +6,6 @@ import createjs.easeljs.SpriteSheet;
 import createjs.easeljs.Sprite;
 import createjs.easeljs.Container;
 import createjs.easeljs.Event;
-import js.html.KeyboardEvent;
 
 import net.daboross.hex.util.Keyboard;
 import net.daboross.hex.Character;
