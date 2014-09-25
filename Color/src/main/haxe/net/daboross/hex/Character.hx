@@ -14,8 +14,10 @@ import net.daboross.hex.util.TimeUtils;
 class Character extends Sprite {
 
     private static var SHOOTING_COOLDOWN = 200; // milliseconds
-    public var statusText:Text = new Text("x = 0 | y = 0", "Ubuntu Mono", "#FFF");
-    public var level:Float = 0;
+    public var statusText:Text = new Text(" Currently initializing stats", "15px Arbutus", "#FFF");
+    public var life:Int = 0;
+    public var score:Int = 0;
+    public var level:Int = 0;
     public var shooting:Bool = false;
     public var spaceX:Float = 0;
     public var spaceY:Float = 0;
@@ -103,6 +105,14 @@ class Character extends Sprite {
         }
     }
 
+    public function updateLevel() {
+        if (score <= 0) {
+            level = 0;
+        } else {
+            level = Std.int(score / 35);
+        }
+    }
+
     public function tick() {
         updateKeys();
         updateWeapons();
@@ -116,6 +126,8 @@ class Character extends Sprite {
         yVelocity *= 0.9;
         rotationVelocity *= 0.9;
 
-        statusText.text = " x = " + Std.int(spaceX) + " | y = " + Std.int(spaceY) + " | FPS = " + Ticker.getFPS();
+        statusText.text = " This game is a test, not really meant to be complete. Feel free to play though!"
+                            + "\n Score: " + score + " | Level: " + (level + 1)
+                            + " | FPS: " + Std.int(Ticker.getFPS());
     }
 }

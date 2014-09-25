@@ -51,6 +51,8 @@ class ProjectileHandler {
                     if (BoundUtils.checkBound(charBullet.sprite.x, charBullet.sprite.y, 0,
                             enemy.x, enemy.y, enemy.radius)) {
                         enemy.shot = true;
+                        space.character.score += 7;
+                        space.character.updateLevel();
                         // bullets are one use only
                         dead.add(charBullet);
                         continue;

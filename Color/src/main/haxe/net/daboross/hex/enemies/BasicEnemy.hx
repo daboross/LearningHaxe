@@ -27,7 +27,12 @@ class BasicEnemy extends Sprite {
         x += speed * Math.cos(rotationRadians);
         y += speed * Math.sin(rotationRadians);
 
-        return !BoundUtils.checkBound(x, y, radius, space.character.spaceX,
+        var hitCharacter:Bool = BoundUtils.checkBound(x, y, radius, space.character.spaceX,
                                         space.character.spaceY, space.character.radius);
+        if (hitCharacter) {
+            space.character.score -= 5;
+            space.character.updateLevel();
+        }
+        return !hitCharacter;
     }
 }
