@@ -1,33 +1,45 @@
 package net.daboross.hex;
 
+import js.html.Image;
+
 import createjs.easeljs.Stage;
 import createjs.easeljs.Ticker;
 import createjs.easeljs.SpriteSheet;
 import createjs.easeljs.Sprite;
 import createjs.easeljs.Container;
 import createjs.easeljs.Event;
+import createjs.preloadjs.LoadQueue;
 
 import net.daboross.hex.util.Keyboard;
 import net.daboross.hex.Character;
 import net.daboross.hex.EnemyHandler;
 import net.daboross.hex.ProjectileHandler;
+import net.daboross.hex.ScrollingBackground;
 
 class SpaceHandler {
 
     public var stage:Stage = new Stage("hex-canvas");
     public var spaceContainer:Container = new Container();
+    public var background:ScrollingBackground;
     public var stageCenterX:Int;
     public var stageCenterY:Int;
     public var keyboard:Keyboard = new Keyboard();
     public var character:Character;
     public var enemies:EnemyHandler;
     public var projectileHandler:ProjectileHandler;
+    public var loadQueue:LoadQueue;
 
     public function new() {
-        onResize(null);
+        loadQueue = new LoadQueue(false, "");
+        loadQueue.addEventListener("complete", addBackground);
+        loadQueue.loadManifest([{src: "background.png", id: "background-image"}]);
 
-        stage.addChild(spaceContainer);
+        // Initial stage setup
+        onResize();
 
+        stage.addChildAt(spaceContainer, 0);
+
+        // Character setup
         this.character = new Character(this, keyboard, createSheet("Green.png", 64, 64), 0);
         character.x = stageCenterX;
         character.y = stageCenterY;
@@ -38,7 +50,14 @@ class SpaceHandler {
         this.projectileHandler = new ProjectileHandler(this, createSheet("projectiles.png", 16, 16));
     }
 
-    public function onResize(e:Dynamic) {
+    public function addBackground() {
+        var backgroundImage:Image = loadQueue.getResult("background-image");
+        background = new ScrollingBackground(backgroundImage, 5);
+        onResize();
+        stage.addChildAt(background.container, 0);
+    }
+
+    public function onResize(?e:Dynamic) {
         var width:Int = js.Browser.window.innerWidth;
         var height:Int = js.Browser.window.innerHeight;
         stage.canvas.width = width;
@@ -48,6 +67,9 @@ class SpaceHandler {
         if (character != null) {
             character.x = stageCenterX;
             character.y = stageCenterY;
+        }
+        if (background != null) {
+            background.updateStageSize(width, height);
         }
     }
 
@@ -67,13 +89,16 @@ class SpaceHandler {
         character.tick();
         spaceContainer.x = stageCenterX - character.spaceX;
         spaceContainer.y = stageCenterY - character.spaceY;
+        if (background != null) {
+            background.update(spaceContainer.x, spaceContainer.y);
+        }
         enemies.tick();
         projectileHandler.tick();
         stage.update();
     }
 
     public function onFocus(e:Dynamic) {
-        onResize(e);
+        onResize();
         Ticker.setPaused(false);
     }
 
