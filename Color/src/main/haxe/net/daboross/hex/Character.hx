@@ -127,7 +127,7 @@ class Character extends Sprite {
         rotationVelocity *= 0.9;
 
         statusText.text = " This game is a test, not really meant to be complete. Feel free to play though!"
-                            + "\n Score: " + score + " | Level: " + (level + 1)
+                            + "\n Score: " + score + " | Level: " + level
                             + " | FPS: " + Std.int(Ticker.getFPS());
     }
 }
