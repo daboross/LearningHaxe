@@ -124,6 +124,13 @@ class Character extends Sprite {
 
     public function shot() {
         life -= 1;
+        if (life <= 0) {
+            score = 0;
+            updateLevel();
+            life = 5;
+            maxLife = 5;
+            // TODO: Full reset of everything.
+        }
     }
 
     public function tick() {
