@@ -15,7 +15,8 @@ class Character extends Sprite {
 
     private static var SHOOTING_COOLDOWN = 200; // milliseconds
     public var statusText:Text = new Text(" Currently initializing stats", "15px Arbutus", "#FFF");
-    public var life:Int = 0;
+    public var maxLife:Int = 5;
+    public var life:Int = 5;
     public var score:Int = 0;
     public var level:Int = 0;
     public var shooting:Bool = false;
@@ -30,7 +31,8 @@ class Character extends Sprite {
     private var nextPossibleShot:Float = 0; // for shooting cooldown
 
     public function new(space:SpaceHandler, keyboard:Keyboard, sheet:SpriteSheet, frame:Dynamic) {
-        super(sheet, frame);
+        super(sheet);
+        this.gotoAndStop(0);
         this.space = space;
         this.keyboard = keyboard;
     }
@@ -109,8 +111,19 @@ class Character extends Sprite {
         if (score <= 0) {
             level = 0;
         } else {
-            level = Std.int(score / 35);
+            var newLevel:Int = Std.int(score / 35);
+            if (newLevel != level) {
+                maxLife += 1;
+                if (life < maxLife && life > 0) {
+                    life += 1;
+                }
+            }
+            level = newLevel;
         }
+    }
+
+    public function shot() {
+        life -= 1;
     }
 
     public function tick() {
@@ -127,7 +140,9 @@ class Character extends Sprite {
         rotationVelocity *= 0.9;
 
         statusText.text = " This game is a test, not really meant to be complete. Feel free to play though!"
-                            + "\n Score: " + score + " | Level: " + level
-                            + " | FPS: " + Std.int(Ticker.getFPS());
+                            + "\n Score: " + score
+                            + "\n Level: " + level
+                            + "\n Life: " + life
+                            + "\n FPS: " + Math.ceil(Ticker.getFPS());
     }
 }

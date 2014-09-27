@@ -14,7 +14,8 @@ class BasicEnemy extends Sprite {
     public var shot:Bool = false; // this will be set to true if this enemy has been shot
 
     public function new(space:SpaceHandler, sheet:SpriteSheet, frame:Dynamic) {
-        super(sheet, frame);
+        super(sheet);
+        this.gotoAndStop(frame);
         this.space = space;
     }
 
@@ -30,8 +31,7 @@ class BasicEnemy extends Sprite {
         var hitCharacter:Bool = BoundUtils.checkBound(x, y, radius, space.character.spaceX,
                                         space.character.spaceY, space.character.radius);
         if (hitCharacter) {
-            space.character.score -= 5;
-            space.character.updateLevel();
+            space.character.shot();
         }
         return !hitCharacter;
     }
