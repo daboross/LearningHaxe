@@ -14,6 +14,7 @@ import net.daboross.hex.util.Keyboard;
 import net.daboross.hex.Character;
 import net.daboross.hex.EnemyHandler;
 import net.daboross.hex.ProjectileHandler;
+import net.daboross.hex.util.ParticleHandler;
 import net.daboross.hex.ScrollingBackground;
 
 class SpaceHandler {
@@ -27,6 +28,7 @@ class SpaceHandler {
     public var character:Character;
     public var enemies:EnemyHandler;
     public var projectileHandler:ProjectileHandler;
+    public var particleHandler:ParticleHandler;
     public var loadQueue:LoadQueue;
 
     public function new() {
@@ -48,11 +50,12 @@ class SpaceHandler {
 
         this.enemies = new EnemyHandler(this, createSheet("enemies.png", 64, 64));
         this.projectileHandler = new ProjectileHandler(this, createSheet("projectiles.png", 16, 16));
+        this.particleHandler = new ParticleHandler(this, createSheet("particles.png", 16, 16));
     }
 
     public function addBackground() {
         var backgroundImage:Image = loadQueue.getResult("background-image");
-        background = new ScrollingBackground(backgroundImage, 5);
+        background = new ScrollingBackground(backgroundImage, 2);
         onResize();
         stage.addChildAt(background.container, 0);
     }
@@ -94,6 +97,7 @@ class SpaceHandler {
         }
         enemies.tick();
         projectileHandler.tick();
+        particleHandler.tick();
         stage.update();
     }
 

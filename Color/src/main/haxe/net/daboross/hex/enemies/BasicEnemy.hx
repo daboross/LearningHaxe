@@ -31,7 +31,7 @@ class BasicEnemy extends Sprite {
         var hitCharacter:Bool = BoundUtils.checkBound(x, y, radius, space.character.spaceX,
                                         space.character.spaceY, space.character.radius);
         if (hitCharacter) {
-            space.character.shot();
+            space.character.hit(rotationRadians, speed);
         }
         return !hitCharacter;
     }

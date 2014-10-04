@@ -98,8 +98,8 @@ class Character extends Sprite {
                 var start:Position = {
                     x:spaceX + xVelocityUnit * radius,
                     y:spaceY + yVelocityUnit * radius,
-                    xVelocity: xVelocityUnit * 8,
-                    yVelocity: yVelocityUnit * 8
+                    xVelocity: xVelocityUnit * 10 + level * 0.2,
+                    yVelocity: yVelocityUnit * 10 + level * 0.2
                 };
                 trace("Firing");
                 space.projectileHandler.spawnCharBullet(start);
@@ -122,15 +122,43 @@ class Character extends Sprite {
         }
     }
 
-    public function shot() {
+    public function hit(projectileRotation:Float, projectileSpeed:Float) {
         life -= 1;
         if (life <= 0) {
             score = 0;
             updateLevel();
             life = 5;
             maxLife = 5;
+            space.particleHandler.addParticlesWithAngle(1,
+                {x:spaceX, y:spaceY, xVariation:20, yVariation:20},
+                0, 2 * Math.PI, 3, 1,
+                100, 3000, 1000);
             // TODO: Full reset of everything.
+        } else {
+            space.particleHandler.addParticlesWithAngle(1,
+                {x:spaceX - Math.cos(projectileRotation) * radius / 2,
+                    y:spaceY - Math.sin(projectileRotation) * radius / 2,
+                    xVariation:20, yVariation:20},
+                    projectileRotation, Math.PI/2,
+                    projectileSpeed, projectileSpeed / 2, 30, 500, 300);
+            space.particleHandler.addParticlesWithAngle(1,
+                {x:spaceX - Math.cos(projectileRotation) * radius / 2,
+                    y:spaceY - Math.sin(projectileRotation) * radius / 2,
+                    xVariation:20, yVariation:20},
+                    projectileRotation, Math.PI/4,
+                    projectileSpeed + 1, projectileSpeed / 2, 20, 500, 300);
         }
+    }
+
+    public function enemyKilled(pos:Position) {
+        score += 7;
+        updateLevel();
+
+        var speed:Float = Math.sqrt(pos.xVelocity * pos.xVelocity + pos.yVelocity * pos.yVelocity);
+        var projectileRotation:Float = Math.acos(pos.xVelocity / speed);
+        space.particleHandler.addParticlesWithAngle(2,
+            {x:pos.x, y:pos.y, xVariation:10, yVariation:10},
+            0, Math.PI * 2, speed / 2, speed / 2, 30, 500, 300);
     }
 
     public function tick() {

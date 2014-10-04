@@ -4,7 +4,7 @@ import createjs.easeljs.Ticker;
 
 class TimeUtils {
 
-    public static inline function getTime() {
-        return Ticker.getTicks(true) * 1000 / 60;
+    public static inline function getTime() : Int {
+        return Std.int(Ticker.getTicks(true) * 1000 / 60);
     }
 }
